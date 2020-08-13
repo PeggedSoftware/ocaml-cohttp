@@ -20,6 +20,27 @@ val call :
   Uri.t ->
   (Cohttp.Response.t * Body.t) Async_kernel.Deferred.t
 
+
+module Connection : sig
+  type t
+
+  val connect :
+    ?interrupt:unit Async_kernel.Deferred.t ->
+    ?ssl_config:Conduit_async.V2.Ssl.Config.t ->
+    Uri.t ->
+    t Async_kernel.Deferred.t
+
+  val close : t -> unit Async_kernel.Deferred.t
+
+  val is_closed : t -> bool
+
+  val request :
+    ?body: Body.t ->
+    t ->
+    Cohttp.Request.t ->
+    (Cohttp.Response.t * Body.t) Async_kernel.Deferred.t
+end
+
 val callv :
   ?interrupt:unit Async_kernel.Deferred.t ->
   ?ssl_config:Conduit_async.V2.Ssl.Config.t ->
